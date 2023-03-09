@@ -54,8 +54,8 @@ void Rellenar_Fichero(Struct_Viaje *v,int n){
 	fclose(f);				
 }
 
-//PREGUNTA 1: Viajes.c debería de tener Menu.h importado? ya que Viajes.c utiliza variables del Menu.c (Menu.c es como el main de viajes.c)
-//PREGUNTA 2: En vez de declarar el vector dinámico se puede poner en Viajes.h para así simplemente importar el módulo y poder usar
+//PREGUNTA 1: Viajes.c deber?a de tener Menu.h importado? ya que Viajes.c utiliza variables del Menu.c (Menu.c es como el main de viajes.c)
+//PREGUNTA 2: En vez de declarar el vector din?mico se puede poner en Viajes.h para as? simplemente importar el m?dulo y poder usar
 //			  el vector sin declararlo?
 
 

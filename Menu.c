@@ -1,7 +1,7 @@
 #include "Menu.h"
 #include "Viajes.h"
 
-void menu(int *x,int n,Struct_Viaje *vec){
+/*void menu(int *x,int n,Struct_Viaje *vec){
 	
 	switch(*x){
 		case 1: 
@@ -12,3 +12,4 @@ void menu(int *x,int n,Struct_Viaje *vec){
 			break;
 	}
 }
+*/

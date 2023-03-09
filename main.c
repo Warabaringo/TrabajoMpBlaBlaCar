@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "cabeceras.h"
 
-int main() {
+/*int main() {
 
     int selec;
     usuario *usu;
@@ -15,3 +15,4 @@ int main() {
 
     return 0;
 }
+ */
