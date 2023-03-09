@@ -5,9 +5,9 @@ typedef struct{
     char descrip_veh[51];
 }alum;
 
-void menu(int *x);
-vehi *cargar(unsigned *nvehiculos);
+void menu_veh(int *x);
+vehi *cargar_veh(unsigned *nvehiculos);
 void lista_vehiculos();
-void cambio(char aux[130]);
-void add();
-void crear_fichero();
+void cambio_veh(char aux[130]);
+void add_veh();
+void crear_fichero_veh();
