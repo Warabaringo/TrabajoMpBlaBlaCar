@@ -1,7 +1,7 @@
 #include "Menu.h"
 #include "Viajes.h"
 
-int main(){
+/*int main(){
 	int x,n;
 	Struct_Viaje *vector_viaje; 
 	
@@ -23,3 +23,4 @@ int main(){
 	
 	return 0;	
 }
+*/
