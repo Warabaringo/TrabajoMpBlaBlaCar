@@ -7,19 +7,19 @@
 #include <stdio.h>
 #include <string.h>
 
-char *crear_identificador (int n, int num_car) {
-	int digitos = num_digitos(n);
+char *crear_identificador (int i, int num_car) {
+	int digitos = num_digitos(i);
 	int ceros = num_car - digitos;
 	char *id = malloc((num_car + 1) * sizeof (char));
 	char *char_digitos = malloc(sizeof (digitos));
-	int i = 0;
+	int cont = 0;
 	
-	for(i = 0; i < ceros; i ++)
-		id[i] = '0';
+	for(cont = 0; cont < ceros; cont++)
+		id[cont] = '0';
 	
 	id[ceros] = '\0';
 	
-	sprintf(char_digitos,"%d",n);
+	sprintf(char_digitos,"%d",i);
 	
 	strcat(id,char_digitos);
 	
@@ -36,5 +36,9 @@ int num_digitos(int n) {
 	
 	return digitos;
 }
-	
-	
+
+void quitar_salto(char *s) {
+	char *pos = strchr(s, '\n');
+	if(pos != NULL)
+		*pos = '\0';
+}
