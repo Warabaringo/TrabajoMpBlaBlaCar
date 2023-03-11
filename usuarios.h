@@ -17,7 +17,7 @@ typedef struct{
 
 void menu(int selec);
 void crear_fichero();
-usuario *cargar(usuario *user, int *numero_usuarios);
+usuario *cargar(int *numero_usuarios);
 void mostrar_lista(usuario *user, int *numero_userarios);
 void anadir(usuario *user, int *numero_usuarios);
 
