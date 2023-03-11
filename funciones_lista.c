@@ -1,7 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include "cabeceras.h"
+#include "usuarios.h"
 
 //Cabecera: void crear_fichero()
 //Precondicion: sin precondicion
@@ -15,10 +12,10 @@ void crear_fichero(){
 }
 
 
-//cabecera: void cambio(char aux[140])
+//cabecera: void quitar_salto(char aux[140])
 //precondición: recibe un string
 //postcondición: intercambia el caracter '\n' de un string por el caracter '\0'
-void cambio(char *aux){
+void quitar_salto(char *aux){
     int i, temp = 0;
     for(i = 0; i < 67 && temp == 0; i++){
         if(aux[i] == '\n') {
@@ -140,12 +137,12 @@ void anadir(usuario *user, int *numero_usuarios){
             printf("Introduce el nombre de usuario (5 caracteres): "); fflush(stdin); fgets(user[*numero_usuarios].Usuario, 6, stdin);
             printf("Introduzca la contrasena (8 caracteres): "); fflush(stdin); fgets(user[*numero_usuarios].Contrasena, 9, stdin);
 
-            cambio(user[*numero_usuarios].Id_usuario);
-            cambio(user[*numero_usuarios].Nomb_usuario);
-            cambio(user[*numero_usuarios].Localidad);
-            cambio(user[*numero_usuarios].Perfil_usuario);
-            cambio(user[*numero_usuarios].Usuario);
-            cambio(user[*numero_usuarios].Contrasena);
+            quitar_salto(user[*numero_usuarios].Id_usuario);
+            quitar_salto(user[*numero_usuarios].Nomb_usuario);
+            quitar_salto(user[*numero_usuarios].Localidad);
+            quitar_salto(user[*numero_usuarios].Perfil_usuario);
+            quitar_salto(user[*numero_usuarios].Usuario);
+            quitar_salto(user[*numero_usuarios].Contrasena);
 
             printf("%s-%s-%s-%s-%s-%s", user[*numero_usuarios].Id_usuario, user[*numero_usuarios].Nomb_usuario, user[*numero_usuarios].Localidad, user[*numero_usuarios].Usuario, user[*numero_usuarios].Perfil_usuario, user[*numero_usuarios].Contrasena);
 

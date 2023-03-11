@@ -1,5 +1,5 @@
-#ifndef CABECERAS_H
-#define CABECERAS_H
+#ifndef USUARIOS_H
+#define USUARIOS_H
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
