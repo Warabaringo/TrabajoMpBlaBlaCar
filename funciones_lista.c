@@ -10,7 +10,7 @@ void crear_fichero(){
     f = fopen("usuarios.txt","a");
     fclose(f);
 }
-
+/*
 
 //cabecera: void quitar_salto(char aux[140])
 //precondición: recibe un string
@@ -24,16 +24,17 @@ void quitar_salto(char *aux){
         }
     }
 }
-
+*/
 
 //Cabecera: usuario *cargar(usuario *usu)
 //Precondicion: se necesita un fichero de texto "usuarios.txt". Recibe un vector de estructura dinámico
 //Postcondicion: devuelve el vector con los datos del fichero de texto almacenados en él
 
-usuario *cargar(usuario *usu, int *numero_usuarios){
+usuario *cargar(int *numero_usuarios){
 
     FILE *f ;
     char *token, linea[67];
+    usuario *usu;
 
     (*numero_usuarios) = 0;
 
@@ -44,10 +45,10 @@ usuario *cargar(usuario *usu, int *numero_usuarios){
         usu = (usuario *) malloc(sizeof (usuario));
 
         while(fgets(linea,67,f) != NULL){
-
             usu =(usuario *)realloc(usu, (*numero_usuarios+1)*sizeof(usuario));
             token = strtok(linea,"-");
             strcpy(usu[*numero_usuarios].Id_usuario,token);
+            printf("holiwis");
 
             token = strtok(NULL,"-");
             strcpy(usu[*numero_usuarios].Nomb_usuario,token);
@@ -68,12 +69,6 @@ usuario *cargar(usuario *usu, int *numero_usuarios){
         }
     }
 
-
-    printf("%s-%s-%s-%s-%s-%s\n", usu[0].Id_usuario, usu[0].Nomb_usuario,usu[0].Localidad,usu[0].Usuario,usu[0].Perfil_usuario,usu[0].Contrasena);
-    printf("%s-%s-%s-%s-%s-%s\n", usu[1].Id_usuario, usu[1].Nomb_usuario,usu[1].Localidad,usu[1].Usuario,usu[1].Perfil_usuario,usu[1].Contrasena);
-    printf("%s-%s-%s-%s-%s-%s\n", usu[2].Id_usuario, usu[2].Nomb_usuario,usu[2].Localidad,usu[2].Usuario,usu[2].Perfil_usuario,usu[2].Contrasena);
-    printf("%s-%s-%s-%s-%s-%s\n\n", usu[3].Id_usuario, usu[3].Nomb_usuario,usu[3].Localidad,usu[3].Usuario,usu[3].Perfil_usuario,usu[3].Contrasena);
-
     printf("En funcion cargar: %i\n\n", *numero_usuarios);
 
     fclose(f);
@@ -92,7 +87,7 @@ void mostrar_lista(usuario *user, int *numero_usuarios){
     printf("LISTA\n\nID-Nombre-Localidad-Perfil-usuario-Contrasena\n\n");
 
     for(i = 0; i < (*numero_usuarios); i++){
-        printf("%s-%s-%s-%s-%s-%s", user[i].Id_usuario, user[i].Nomb_usuario, user[i].Localidad, user[i].Perfil_usuario, user[i].Usuario, user[i].Contrasena);
+        printf("%s-%s-%s-%s-%s-%s\n", user[i].Id_usuario, user[i].Nomb_usuario, user[i].Localidad, user[i].Perfil_usuario, user[i].Usuario, user[i].Contrasena);
     }
     puts("");
 }
@@ -137,12 +132,14 @@ void anadir(usuario *user, int *numero_usuarios){
             printf("Introduce el nombre de usuario (5 caracteres): "); fflush(stdin); fgets(user[*numero_usuarios].Usuario, 6, stdin);
             printf("Introduzca la contrasena (8 caracteres): "); fflush(stdin); fgets(user[*numero_usuarios].Contrasena, 9, stdin);
 
+            /*
             quitar_salto(user[*numero_usuarios].Id_usuario);
             quitar_salto(user[*numero_usuarios].Nomb_usuario);
             quitar_salto(user[*numero_usuarios].Localidad);
             quitar_salto(user[*numero_usuarios].Perfil_usuario);
             quitar_salto(user[*numero_usuarios].Usuario);
             quitar_salto(user[*numero_usuarios].Contrasena);
+             */
 
             printf("%s-%s-%s-%s-%s-%s", user[*numero_usuarios].Id_usuario, user[*numero_usuarios].Nomb_usuario, user[*numero_usuarios].Localidad, user[*numero_usuarios].Usuario, user[*numero_usuarios].Perfil_usuario, user[*numero_usuarios].Contrasena);
 
