@@ -1,5 +1,5 @@
-#ifndef USUARIOS_H
-#define USUARIOS_H
+#ifndef Usuario_H
+#define Usuario_H
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -15,10 +15,11 @@ typedef struct{
 
 }usuario;
 
-void menu(int selec);
+void menu();
 void crear_fichero();
 usuario *cargar(int *numero_usuarios);
-void mostrar_lista(usuario *user, int *numero_userarios);
+void mostrar_lista(usuario *user, int *numero_usuarios);
 void anadir(usuario *user, int *numero_usuarios);
+int iniciar_sesion(usuario *user, int *numero_usuarios);
 
 #endif

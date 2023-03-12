@@ -1,4 +1,4 @@
-#include "usuarios.h"
+#include "Usuario.h"
 
 //Cabecera: void crear_fichero()
 //Precondicion: sin precondicion
@@ -26,8 +26,8 @@ void quitar_salto(char *aux){
 }
 */
 
-//Cabecera: usuario *cargar(usuario *usu)
-//Precondicion: se necesita un fichero de texto "usuarios.txt". Recibe un vector de estructura dinámico
+//Cabecera: usuario *cargar(int *numero_usuarios)
+//Precondicion: se necesita un fichero de texto "usuarios.txt". Recibe el numero de usuario, inicialmente a cero
 //Postcondicion: devuelve el vector con los datos del fichero de texto almacenados en él
 
 usuario *cargar(int *numero_usuarios){
@@ -35,8 +35,6 @@ usuario *cargar(int *numero_usuarios){
     FILE *f ;
     char *token, linea[67];
     usuario *usu;
-
-    (*numero_usuarios) = 0;
 
     f = fopen("usuarios.txt","r");
     if(f == NULL) printf("No se ha podido abrir el fichero.\n\n");
@@ -48,7 +46,6 @@ usuario *cargar(int *numero_usuarios){
             usu =(usuario *)realloc(usu, (*numero_usuarios+1)*sizeof(usuario));
             token = strtok(linea,"-");
             strcpy(usu[*numero_usuarios].Id_usuario,token);
-            printf("holiwis");
 
             token = strtok(NULL,"-");
             strcpy(usu[*numero_usuarios].Nomb_usuario,token);
@@ -70,6 +67,9 @@ usuario *cargar(int *numero_usuarios){
     }
 
     printf("En funcion cargar: %i\n\n", *numero_usuarios);
+
+    printf("En funcion cargar: %s-%s-%s-%s-%s-%s\n", usu[0].Id_usuario, usu[0].Nomb_usuario, usu[0].Localidad, usu[0].Perfil_usuario, usu[0].Usuario, usu[0].Contrasena);
+
 
     fclose(f);
 
