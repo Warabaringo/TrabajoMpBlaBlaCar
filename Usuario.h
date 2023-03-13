@@ -6,7 +6,7 @@
 
 typedef struct{
 
-    char Id_usuario[5];
+    int  Id_usuario;
     char Nomb_usuario[21];
     char Localidad[21];
     char Perfil_usuario[14];
