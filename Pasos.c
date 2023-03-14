@@ -16,7 +16,7 @@ void mostrar_pasos(Pasos *p, int n) {
 }
 
 void mostrar_parada(Pasos p) {
-	printf("$s-%s\n", p.Id_viaje, p.Poblacion);
+	printf("$i-%s\n", p.Id_viaje, p.Poblacion);
 }
 
 

@@ -6,7 +6,7 @@
 #define TRABAJOMPBLABLACAR_PASOS_H
 
 typedef struct {
-	char Id_viaje[7];
+	int Id_viaje;
 	char Poblacion[21];
 }Pasos;
 
