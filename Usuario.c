@@ -1,23 +1,33 @@
 #include "Usuario.h"
 
-void perfil(){
+void perfil(usuario *user, int sesion_usuario){
 
+    system("cls");
+    printf("\tPERFIL\n\n");
 
+    printf("ID: %05d\n", user[sesion_usuario].Id_usuario);
+    printf("Nombre: %s\n", user[sesion_usuario].Nomb_usuario);
+    printf("Localidad: %s\n", user[sesion_usuario].Localidad);
+    printf("Usuario: %s\n", user[sesion_usuario].Usuario);
+    printf("Contrasena: %s\n", user[sesion_usuario].Contrasena);
+
+    system("pause");
 
 }
 
 int iniciar_sesion(usuario *user, int *numero_usuarios){
 
     FILE *f;
-    int i, j, valor_usuario, salida = 0, error = 0;
-    char login[5], psw[8];
+    int i, valor_usuario, salida = 0, error = 0;
+    char login[6], psw[9];
 
     f = fopen("Usuarios.txt", "r");
     if(f == NULL) printf("No se ha podido abrir el archivo");
     else{
 
-        printf("Introduce usuario: "); fgets(login, 6, stdin); puts("");
-        printf("Introduce contrasena: "), fgets(psw, 9, stdin); puts("");
+        printf("Introduce usuario: "); fflush(stdin); fgets(login, 6, stdin);
+        printf("Introduce contrasena: "), fflush(stdin); fgets(psw, 9, stdin); puts("");
+
 
         for(i = 0; i < *numero_usuarios && salida == 0 && error == 0; i++){
 
@@ -34,9 +44,8 @@ int iniciar_sesion(usuario *user, int *numero_usuarios){
         if(salida == 0 || error == 1) printf("Usuario o contrasena incorrectos.\n\n");
     }
 
-
     return valor_usuario;
-};
+}
 
 void registrarse(){
 
@@ -47,26 +56,26 @@ void registrarse(){
 //Precondición:
 //Postcondición: imprime por pantalla un menú, el cual permite elegir diferentes opciones. No devuelve nada.
 
-void menu(){
+void menu_inicio(){
 
     int selec;
     usuario *user;
-    int *numero_usuarios = 0;
+    int numero_usuarios, sesion_usuario;
+    char *selec_admin = "usuario";
 
     user = cargar(&numero_usuarios);
 
     do{
 
-        printf("Opcion 1:Perfil  \n");
-        printf("Opcion 2: Vehiculos \n");
-        printf("Opcion 3: Viajes\n");
+        printf("Opcion 1: Iniciar sesion\n");
+        printf("Opcion 2: Registrarse\n");
         printf("\nSeleccione una opcion: ");
         scanf("%i", &selec);
 
         switch(selec){
 
-            case 1: mostrar_lista(user, &numero_usuarios); break;
-            case 2: printf("Anadir.\n"); anadir(user, numero_usuarios); break;
+            case 1: sesion_usuario = iniciar_sesion(user, &numero_usuarios); break;
+            case 2:
             case 3: printf("Has seleccionado la opcion 3.\n"); break;
             default: printf("\nSELECCIONE UNA OPCION VALIDA\n\n"); fflush(stdin);
                 system("pause");
@@ -75,9 +84,47 @@ void menu(){
         }
     }while (selec < 1 || selec > 3);
 
+    if(strcmp(user[sesion_usuario].Perfil_usuario, selec_admin) == 0) cuenta_usuario(user, sesion_usuario);
+
 }
 
+void cuenta_usuario(usuario *user, int sesion_usuario){
+
+    int selec;
+    system("cls");
+    do{
+
+        printf("\tUsuario: %s\n\n",user[sesion_usuario].Nomb_usuario);
+        printf("1. Perfil\n2. Vehiculos\n3. Viajes\n4. Salir\n\n");
+        printf("Seleccione una opcion: ");
+        scanf("%i", &selec);
+
+        switch (selec){
+
+            case 1: perfil(user, sesion_usuario); break;
+            case 2: printf("Sin implementar.\n"); break;
+            case 3: printf("Sin implementar.\n"); break;
+            case 4: exit(1);
+            default: printf("\nSELECCIONE UNA OPCION VALIDA\n\n"); fflush(stdin);
+                system("pause");
+                system("cls");
+
+        }
+
+    }while(selec != 4);
+
+
+
+}
+
+
+
+
+
+//
 // FUNCIONES RELACIONADAS A FICHEROS
+//
+
 
 //Cabecera: void crear_fichero()
 //Precondicion: sin precondicion
@@ -99,47 +146,45 @@ usuario *cargar(int *numero_usuarios){
     FILE *f ;
     char *token, linea[67];
     usuario *usu;
+    (*numero_usuarios) = 0;
 
     f = fopen("usuarios.txt","r");
-    if(f == NULL) printf("No se ha podido abrir el fichero.\n\n");
-    else{
+    if(f == NULL){
+        printf("No se ha podido abrir el fichero.\n\n");
+        exit(1);
+    }
+    else {
 
-        usu = (usuario *)malloc((*numero_usuarios+1)* sizeof(usuario));
-        //usu = (usuario *) calloc(*numero_usuarios+1,sizeof(usuario));
+        //usu = (usuario *)malloc((*numero_usuarios+1)* sizeof(usuario));
+        usu = (usuario *) calloc((*numero_usuarios) + 1, sizeof(usuario));
 
-        while(fgets(linea,67,f) != NULL){
-            usu =(usuario *)realloc(usu, (*numero_usuarios+1)*sizeof(usuario));
-            token = strtok(linea,"-");
+        while (fgets(linea, 67, f) != NULL) {
+            usu = (usuario *) realloc(usu, (*numero_usuarios + 1) * sizeof(usuario));
+            token = strtok(linea, "-");
             usu[*numero_usuarios].Id_usuario = atoi(token);
 
-            token = strtok(NULL,"-");
-            strcpy(usu[*numero_usuarios].Nomb_usuario,token);
+            token = strtok(NULL, "-");
+            strcpy(usu[*numero_usuarios].Nomb_usuario, token);
 
-            token = strtok(NULL,"-");
-            strcpy(usu[*numero_usuarios].Localidad,token);
+            token = strtok(NULL, "-");
+            strcpy(usu[*numero_usuarios].Localidad, token);
 
-            token = strtok(NULL,"-");
-            strcpy(usu[*numero_usuarios].Perfil_usuario,token);
+            token = strtok(NULL, "-");
+            strcpy(usu[*numero_usuarios].Perfil_usuario, token);
 
-            token = strtok(NULL,"-");
-            strcpy(usu[*numero_usuarios].Usuario,token);
+            token = strtok(NULL, "-");
+            strcpy(usu[*numero_usuarios].Usuario, token);
 
-            token = strtok(NULL,"\n");
-            strcpy(usu[*numero_usuarios].Contrasena,token);
+            token = strtok(NULL, "\n");
+            strcpy(usu[*numero_usuarios].Contrasena, token);
 
             (*numero_usuarios)++;
         }
+
     }
-
-    printf("En funcion cargar: %i\n\n", *numero_usuarios);
-
-    printf("En funcion cargar: %05d-%s-%s-%s-%s-%s\n", usu[0].Id_usuario, usu[0].Nomb_usuario, usu[0].Localidad, usu[0].Perfil_usuario, usu[0].Usuario, usu[0].Contrasena);
-
-
     fclose(f);
-
-    free(usu);
     return usu;
+    free(usu);
 }
 
 
