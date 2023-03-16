@@ -1,8 +1,10 @@
 #include "Usuario.h"
+#include "Utilidades.h"
 
-void perfil(usuario *user, int sesion_usuario){
-
+usuario perfil(usuario *user, int sesion_usuario){
+    int selec;
     system("cls");
+
     printf("\tPERFIL\n\n");
 
     printf("ID: %05d\n", user[sesion_usuario].Id_usuario);
@@ -11,7 +13,76 @@ void perfil(usuario *user, int sesion_usuario){
     printf("Usuario: %s\n", user[sesion_usuario].Usuario);
     printf("Contrasena: %s\n", user[sesion_usuario].Contrasena);
 
-    system("pause");
+    printf("\n1. Volver\n");
+    printf("2. Modificar perfil\n");
+    printf("\nIntroduce una opcion: ");
+    scanf("%i", &selec);
+
+    do{
+        fflush(stdin);
+
+        switch(selec){
+            case 1: break;
+            case 2: user = modificar_perfil(user, sesion_usuario); break;
+            default:
+                system("cls");
+                printf("\tPERFIL\n\n");
+                printf("ID: %05d\n", user[sesion_usuario].Id_usuario);
+                printf("Nombre: %s\n", user[sesion_usuario].Nomb_usuario);
+                printf("Localidad: %s\n", user[sesion_usuario].Localidad);
+                printf("Usuario: %s\n", user[sesion_usuario].Usuario);
+                printf("Contrasena: %s\n", user[sesion_usuario].Contrasena);
+
+                printf("\n1. Volver\n");
+                printf("2. Modificar perfil\n");
+                printf("\nIntroduce una opcion valida: ");
+                scanf("%i", &selec);
+
+        }
+
+    }while(selec < 1 || selec > 2 );
+
+   // printf("%s", user[sesion_usuario].Nomb_usuario);
+
+
+}
+
+usuario *modificar_perfil(usuario *user, int sesion_usuario){
+
+    int selec;
+
+    system("cls");
+
+    printf("MODIFICAR PERFIL\n\n");
+    printf("1. Nombre\n");
+    printf("2. Localidad\n");
+    printf("3. Usuario\n");
+    printf("4. Contrasena\n");
+    printf("5. Volver\n\n");
+    printf("Seleccione una opcion: "); fflush(stdin); scanf("%i", &selec);
+    system("cls");
+
+    do{
+
+        switch (selec){
+
+            case 1: printf("Introduce nuevo nombre (20 caracteres): "); fflush(stdin); fgets(user[sesion_usuario].Nomb_usuario, 21, stdin); quitar_salto(user[sesion_usuario].Nomb_usuario); break;
+            case 2: printf("Introduce nueva localidad (20 caracteres): "); fflush(stdin); fgets(user[sesion_usuario].Localidad, 21, stdin); quitar_salto(user[sesion_usuario].Localidad); break;
+            case 3: printf("Introduce nuevo usuario (5 caracteres): "); fflush(stdin); fgets(user[sesion_usuario].Usuario, 6, stdin); quitar_salto(user[sesion_usuario].Usuario); break;
+            case 4: printf("Introduce nueva contrasena (8 caracteres): "); fflush(stdin); fgets(user[sesion_usuario].Contrasena, 9, stdin); quitar_salto(user[sesion_usuario].Contrasena); break;
+            case 5: break;
+            default:
+                printf("MODIFICAR PERFIL\n\n");
+                printf("1. Nombre\n");
+                printf("2. Localidad\n");
+                printf("3. Usuario\n");
+                printf("4. Contrasena\n");
+                printf("5. Volver\n\n");
+                printf("\n\nIntroduce una opcion valida: "); fflush(stdin); scanf("%i", &selec);
+
+        }
+        system("cls");
+    }while(selec < 1 || selec > 5);
 
 }
 
@@ -61,22 +132,33 @@ void menu_inicio(){
     int selec;
     usuario *user;
     int numero_usuarios, sesion_usuario;
-    char *selec_admin = "usuario";
+    char *selec_admin = "administrador";
 
     user = cargar(&numero_usuarios);
 
     do{
 
+        printf("   ___  _           ___  _           ___              \n"
+               "  / __\\| |  __ _   / __\\| |  __ _   / __\\  __ _  _ __ \n"
+               " /__\\//| | / _` | /__\\//| | / _` | / /    / _` || '__|\n"
+               "/ \\/  \\| || (_| |/ \\/  \\| || (_| |/ /___ | (_| || |   \n"
+               "\\_____/|_| \\__,_|\\_____/|_| \\__,_|\\____/  \\__,_||_|   \n"
+               "                                                      ");
+        puts("");
+
         printf("Opcion 1: Iniciar sesion\n");
         printf("Opcion 2: Registrarse\n");
+        printf("Opcion 3: Salir del programa\n");
         printf("\nSeleccione una opcion: ");
         scanf("%i", &selec);
+
+        system("cls");
 
         switch(selec){
 
             case 1: sesion_usuario = iniciar_sesion(user, &numero_usuarios); break;
             case 2:
-            case 3: printf("Has seleccionado la opcion 3.\n"); break;
+            case 3: exit(1);
             default: printf("\nSELECCIONE UNA OPCION VALIDA\n\n"); fflush(stdin);
                 system("pause");
                 system("cls");
@@ -84,7 +166,65 @@ void menu_inicio(){
         }
     }while (selec < 1 || selec > 3);
 
-    if(strcmp(user[sesion_usuario].Perfil_usuario, selec_admin) == 0) cuenta_usuario(user, sesion_usuario);
+    if(strcmp(user[sesion_usuario].Perfil_usuario, selec_admin) != 0) cuenta_usuario(user, sesion_usuario);
+    else cuenta_admin(user, sesion_usuario, &numero_usuarios);
+
+}
+
+void cuenta_admin(usuario *user, int sesion_usuario, int *numero_usuarios){
+
+    int selec, exit = 0;
+    system("cls");
+
+    do{
+        printf("\tUsuario: %s\n\n", user[sesion_usuario].Nomb_usuario);
+        printf("1. Usuarios\n2. Vehiculos\n3. Viajes\n4. Salir\n\n");
+        printf("Seleccione una opcion: ");
+        selec = 0;
+        fflush(stdin);
+        scanf("%i", &selec);
+
+        switch (selec) {
+
+            case 1: menu_admin_usuarios(user, numero_usuarios);break;
+            case 2: break;
+            case 3: break;
+            case 4: exit = 1; break;
+            default: printf("\nSELECCIONE UNA OPCION VALIDA\n\n");
+                fflush(stdin);
+                system("pause");
+                system("cls");
+        }
+    }while((selec < 1 || selec > 4) || exit == 0);
+
+}
+
+void menu_admin_usuarios(usuario *user, int *numero_usuarios){
+
+    int selec, exit = 0;
+
+    do{
+        system("cls");
+        printf("\tGestion de Usuarios\n\n");
+        printf("1. Dar de alta\n2. Dar de baja\n3. Modificar usuario\n4. Listar usuarios\n5. Volver\n\n");
+        printf("Seleccione una opcion: ");
+        selec = 0;
+        fflush(stdin);
+        scanf("%i", &selec);
+        system("cls");
+
+        switch (selec) {
+
+            case 1: break;
+            case 2: break;
+            case 3: break;
+            case 4: mostrar_lista(user, numero_usuarios); system("pause"); break;
+            case 5: exit = 1; break;
+            default: printf("\nSELECCIONE UNA OPCION VALIDA\n\n");
+                system("pause");
+                system("cls");
+        }
+    }while(selec < 1 || selec > 5 || exit == 0);
 
 }
 
@@ -97,20 +237,20 @@ void cuenta_usuario(usuario *user, int sesion_usuario){
         printf("\tUsuario: %s\n\n",user[sesion_usuario].Nomb_usuario);
         printf("1. Perfil\n2. Vehiculos\n3. Viajes\n4. Salir\n\n");
         printf("Seleccione una opcion: ");
+        fflush(stdin);
         scanf("%i", &selec);
 
         switch (selec){
 
-            case 1: perfil(user, sesion_usuario); break;
+            case 1: perfil(user, sesion_usuario); fflush(stdin); break;
             case 2: printf("Sin implementar.\n"); break;
             case 3: printf("Sin implementar.\n"); break;
             case 4: exit(1);
             default: printf("\nSELECCIONE UNA OPCION VALIDA\n\n"); fflush(stdin);
                 system("pause");
                 system("cls");
-
         }
-
+        system("cls");
     }while(selec != 4);
 
 
@@ -202,7 +342,7 @@ void mostrar_lista(usuario *user, int *numero_usuarios){
     }
     puts("");
 }
-
+/*
 void anadir(usuario *user, int *numero_usuarios){
 
     FILE *f;
@@ -242,14 +382,14 @@ void anadir(usuario *user, int *numero_usuarios){
             printf("Introduce el nombre de usuario (5 caracteres): "); fflush(stdin); fgets(user[*numero_usuarios].Usuario, 6, stdin);
             printf("Introduzca la contrasena (8 caracteres): "); fflush(stdin); fgets(user[*numero_usuarios].Contrasena, 9, stdin);
 
-            /*
+
             quitar_salto(user[*numero_usuarios].Id_usuario);
             quitar_salto(user[*numero_usuarios].Nomb_usuario);
             quitar_salto(user[*numero_usuarios].Localidad);
             quitar_salto(user[*numero_usuarios].Perfil_usuario);
             quitar_salto(user[*numero_usuarios].Usuario);
             quitar_salto(user[*numero_usuarios].Contrasena);
-             */
+
 
             printf("%s-%s-%s-%s-%s-%s", user[*numero_usuarios].Id_usuario, user[*numero_usuarios].Nomb_usuario, user[*numero_usuarios].Localidad, user[*numero_usuarios].Usuario, user[*numero_usuarios].Perfil_usuario, user[*numero_usuarios].Contrasena);
 
@@ -272,7 +412,7 @@ void anadir(usuario *user, int *numero_usuarios){
 }
 
 
-/*
+
 
 //cabecera: void quitar_salto(char aux[140])
 //precondición: recibe un string

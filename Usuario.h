@@ -22,5 +22,9 @@ void mostrar_lista(usuario *user, int *numero_usuarios);
 void anadir(usuario *user, int *numero_usuarios);
 int iniciar_sesion(usuario *user, int *numero_usuarios);
 void cuenta_usuario(usuario *user, int sesion_usuario);
+void cuenta_admin(usuario *user, int sesion_usuario, int *numero_usuarios);
+usuario *modificar_perfil(usuario *user, int sesion_usuario);
+usuario perfil(usuario *user, int sesion_usuario);
+void menu_admin_usuarios(usuario *user, int *numero_usuarios);
 
 #endif
