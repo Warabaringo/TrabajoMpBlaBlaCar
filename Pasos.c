@@ -17,13 +17,13 @@ void mostrar_pasos(Pasos *p, int n) {
 }
 
 void mostrar_paso(Pasos p) {
-	printf("%d-%s\n", p.Id_viaje, p.Poblacion);
+	printf("%06d-%s\n", p.Id_viaje, p.Poblacion);
 }
 
 int encontrar_paso(Pasos *p, unsigned n, int id) {
 	int i = 0, encontrado = -1;
 	
-	while (encontrado == -1) {
+	while (i < n && encontrado == -1) {
 		if(id == p[i].Id_viaje) {
 			encontrado = i;
 		}
@@ -32,6 +32,19 @@ int encontrar_paso(Pasos *p, unsigned n, int id) {
 	}
 	
 	return encontrado;
+}
+void mostrar_pasos_id(Pasos *pasos, int n, int id) {
+	int i = 0, encontrado = encontrar_paso(pasos,n,id), fin = 0;
+	
+	while (fin == 0) {
+		if(pasos[i].Id_viaje > encontrado)
+			fin = 1;
+		else {
+			mostrar_paso(pasos[i]);
+			i++;
+		}
+	}
+	
 }
 
 Pasos *leer_pasos(unsigned *nPasos) {

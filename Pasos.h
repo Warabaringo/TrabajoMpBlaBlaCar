@@ -17,4 +17,5 @@ void guardar_paso(Pasos, FILE *);
 void guardar_pasos(Pasos *, unsigned);
 int encontrar_paso(Pasos *, unsigned , int);
 int existe_paso(Pasos *, unsigned , int);
+void mostrar_pasos_id(Pasos *, int, int);
 #endif //PASOS_H
