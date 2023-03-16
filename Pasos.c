@@ -3,12 +3,11 @@
 //
 
 #include "Pasos.h"
-#include "Viajes.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-void mostrar_pasos(Pasos *p, int n) {
+void mostrar_pasos(Pasos *p, unsigned n) {
 	int i;
 	
 	for (i = 0; i < n; i++) {
@@ -34,17 +33,18 @@ int encontrar_paso(Pasos *p, unsigned n, int id) {
 	return encontrado;
 }
 void mostrar_pasos_id(Pasos *pasos, int n, int id) {
-	int i = 0, encontrado = encontrar_paso(pasos,n,id), fin = 0;
-	
-	while (fin == 0) {
-		if(pasos[i].Id_viaje > encontrado)
-			fin = 1;
-		else {
-			mostrar_paso(pasos[i]);
-			i++;
+	int i = encontrar_paso(pasos,n,id), fin = 0;
+	if(existe_paso(pasos,n,id)) {
+		while (i < n && fin == 0) {
+			if(id == pasos[i].Id_viaje) {
+				mostrar_paso(pasos[i]);
+				i++;
+			}
+			else
+				fin = 1;
 		}
-	}
-	
+	} else
+		puts("No existe");
 }
 
 Pasos *leer_pasos(unsigned *nPasos) {
@@ -53,23 +53,31 @@ Pasos *leer_pasos(unsigned *nPasos) {
 	
 	FILE *f = fopen("Pasos.txt", "r");
 	char linea[40], *token;
-	unsigned n = 0;
-	
-	while (fgets(linea,40,f) != NULL) {
-		token = strtok(linea,"-");
-		p.Id_viaje = atoi(token);
-		token = strtok(NULL, "\n");
-		strcpy(p.Poblacion,token);
-		
-		n++;
-		pasos = (Pasos*)realloc(pasos, n*sizeof(pasos));
-		pasos[n-1] = p;
+	int n = 0;
+	if(f == NULL) {
+		puts("No se puedo abrir el fichero");
+		exit(1);
 	}
 	
-	fclose(f);
-	*nPasos = n;
-	
-	return pasos;
+	else {
+		while (fgets(linea, 40, f) != NULL) {
+			token = strtok(linea, "-");
+			p.Id_viaje = atoi(token);
+			token = strtok(NULL, "\n");
+			strcpy(p.Poblacion, token);
+			
+			n++;
+			pasos = (Pasos *) realloc(pasos, n * sizeof(Pasos));
+			pasos[n - 1] = p;
+			
+		}
+		
+		
+		fclose(f);
+		*nPasos = n;
+		
+		return pasos;
+	}
 }
 
 void guardar_paso(Pasos paso, FILE *f) {

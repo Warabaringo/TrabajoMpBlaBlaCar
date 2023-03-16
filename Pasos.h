@@ -11,7 +11,7 @@ typedef struct {
 }Pasos;
 
 void mostrar_paso(Pasos);
-void mostrar_pasos(Pasos *, int);
+void mostrar_pasos(Pasos *, unsigned );
 Pasos *leer_pasos(unsigned *);
 void guardar_paso(Pasos, FILE *);
 void guardar_pasos(Pasos *, unsigned);
