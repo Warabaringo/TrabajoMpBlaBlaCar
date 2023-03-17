@@ -1,7 +1,7 @@
 #include "Usuario.h"
 #include "Utilidades.h"
 
-usuario perfil(usuario *user, int sesion_usuario){
+usuario perfil(usuario *user, int sesion_usuario, int *numero_usuarios){
     int selec;
     system("cls");
 
@@ -23,7 +23,7 @@ usuario perfil(usuario *user, int sesion_usuario){
 
         switch(selec){
             case 1: break;
-            case 2: user = modificar_perfil(user, sesion_usuario); break;
+            case 2: user = modificar_usuario(user, sesion_usuario, numero_usuarios); break;
             default:
                 system("cls");
                 printf("\tPERFIL\n\n");
@@ -43,15 +43,30 @@ usuario perfil(usuario *user, int sesion_usuario){
     }while(selec < 1 || selec > 2 );
 
    // printf("%s", user[sesion_usuario].Nomb_usuario);
-
+    return *user;
 
 }
 
-usuario *modificar_perfil(usuario *user, int sesion_usuario){
+usuario *modificar_usuario(usuario *user, int sesion_usuario, int *numero_usuarios){
 
     int selec;
 
     system("cls");
+
+
+    do{
+        if(sesion_usuario < 0 || sesion_usuario >= *numero_usuarios){
+            printf("Introduce ID de usuario: "); fflush(stdin); scanf("%i", &sesion_usuario);
+
+            if(sesion_usuario < 0 || sesion_usuario >= *numero_usuarios){
+                printf("\n\nINTRODUCE UN ID VALIDO\n\n");
+                system("pause");
+                system("cls");
+            }
+            sesion_usuario -= 1;
+
+        }
+    }while(sesion_usuario < 0 || sesion_usuario >= *numero_usuarios);
 
     printf("MODIFICAR PERFIL\n\n");
     printf("1. Nombre\n");
@@ -84,6 +99,7 @@ usuario *modificar_perfil(usuario *user, int sesion_usuario){
         system("cls");
     }while(selec < 1 || selec > 5);
 
+    return user;
 }
 
 int iniciar_sesion(usuario *user, int *numero_usuarios){
@@ -166,7 +182,7 @@ void menu_inicio(){
         }
     }while (selec < 1 || selec > 3);
 
-    if(strcmp(user[sesion_usuario].Perfil_usuario, selec_admin) != 0) cuenta_usuario(user, sesion_usuario);
+    if(strcmp(user[sesion_usuario].Perfil_usuario, selec_admin) != 0) cuenta_usuario(user, sesion_usuario, &numero_usuarios);
     else cuenta_admin(user, sesion_usuario, &numero_usuarios);
 
 }
@@ -201,7 +217,7 @@ void cuenta_admin(usuario *user, int sesion_usuario, int *numero_usuarios){
 
 void menu_admin_usuarios(usuario *user, int *numero_usuarios){
 
-    int selec, exit = 0;
+    int selec, exit = 0, id_user = -1;
 
     do{
         system("cls");
@@ -217,7 +233,7 @@ void menu_admin_usuarios(usuario *user, int *numero_usuarios){
 
             case 1: break;
             case 2: break;
-            case 3: break;
+            case 3: modificar_usuario(user, id_user, numero_usuarios);break;
             case 4: mostrar_lista(user, numero_usuarios); system("pause"); break;
             case 5: exit = 1; break;
             default: printf("\nSELECCIONE UNA OPCION VALIDA\n\n");
@@ -228,7 +244,7 @@ void menu_admin_usuarios(usuario *user, int *numero_usuarios){
 
 }
 
-void cuenta_usuario(usuario *user, int sesion_usuario){
+void cuenta_usuario(usuario *user, int sesion_usuario, int *numero_usuarios){
 
     int selec;
     system("cls");
@@ -242,7 +258,7 @@ void cuenta_usuario(usuario *user, int sesion_usuario){
 
         switch (selec){
 
-            case 1: perfil(user, sesion_usuario); fflush(stdin); break;
+            case 1: perfil(user, sesion_usuario, numero_usuarios); fflush(stdin); break;
             case 2: printf("Sin implementar.\n"); break;
             case 3: printf("Sin implementar.\n"); break;
             case 4: exit(1);
@@ -341,6 +357,7 @@ void mostrar_lista(usuario *user, int *numero_usuarios){
         printf("%05d-%s-%s-%s-%s-%s\n", user[i].Id_usuario, user[i].Nomb_usuario, user[i].Localidad, user[i].Perfil_usuario, user[i].Usuario, user[i].Contrasena);
     }
     puts("");
+
 }
 /*
 void anadir(usuario *user, int *numero_usuarios){
