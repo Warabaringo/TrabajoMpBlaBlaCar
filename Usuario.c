@@ -1,7 +1,7 @@
 #include "Usuario.h"
 #include "Utilidades.h"
 
-usuario perfil(usuario *user, int sesion_usuario, int *numero_usuarios){
+usuario *perfil(usuario *user, int sesion_usuario, int *numero_usuarios){
     int selec;
     system("cls");
 
@@ -43,7 +43,7 @@ usuario perfil(usuario *user, int sesion_usuario, int *numero_usuarios){
     }while(selec < 1 || selec > 2 );
 
    // printf("%s", user[sesion_usuario].Nomb_usuario);
-    return *user;
+    return user;
 
 }
 
@@ -56,28 +56,28 @@ usuario *modificar_usuario(usuario *user, int sesion_usuario, int *numero_usuari
 
     do{
         if(sesion_usuario < 0 || sesion_usuario >= *numero_usuarios){
-            printf("Introduce ID de usuario: "); fflush(stdin); scanf("%i", &sesion_usuario);
+            printf("Introduce ID de usuario: "); fflush(stdin); scanf("%i", &sesion_usuario); sesion_usuario -= 1;
 
             if(sesion_usuario < 0 || sesion_usuario >= *numero_usuarios){
                 printf("\n\nINTRODUCE UN ID VALIDO\n\n");
                 system("pause");
                 system("cls");
             }
-            sesion_usuario -= 1;
+
 
         }
     }while(sesion_usuario < 0 || sesion_usuario >= *numero_usuarios);
 
-    printf("MODIFICAR PERFIL\n\n");
-    printf("1. Nombre\n");
-    printf("2. Localidad\n");
-    printf("3. Usuario\n");
-    printf("4. Contrasena\n");
-    printf("5. Volver\n\n");
-    printf("Seleccione una opcion: "); fflush(stdin); scanf("%i", &selec);
-    system("cls");
 
     do{
+        printf("MODIFICAR PERFIL\n\n");
+        printf("1. Nombre\n");
+        printf("2. Localidad\n");
+        printf("3. Usuario\n");
+        printf("4. Contrasena\n");
+        printf("5. Volver\n\n");
+        printf("Seleccione una opcion: "); fflush(stdin); scanf("%i", &selec);
+        system("cls");
 
         switch (selec){
 
@@ -87,17 +87,15 @@ usuario *modificar_usuario(usuario *user, int sesion_usuario, int *numero_usuari
             case 4: printf("Introduce nueva contrasena (8 caracteres): "); fflush(stdin); fgets(user[sesion_usuario].Contrasena, 9, stdin); quitar_salto(user[sesion_usuario].Contrasena); break;
             case 5: break;
             default:
-                printf("MODIFICAR PERFIL\n\n");
-                printf("1. Nombre\n");
-                printf("2. Localidad\n");
-                printf("3. Usuario\n");
-                printf("4. Contrasena\n");
-                printf("5. Volver\n\n");
-                printf("\n\nIntroduce una opcion valida: "); fflush(stdin); scanf("%i", &selec);
+                printf("INTRODUCE UNA OPCION VALIDA");
+                system("pause");
+                system("cls");
 
         }
         system("cls");
     }while(selec < 1 || selec > 5);
+
+    sobreescribir_fichero(user, numero_usuarios);
 
     return user;
 }
@@ -109,6 +107,7 @@ int iniciar_sesion(usuario *user, int *numero_usuarios){
     char login[6], psw[9];
 
     f = fopen("Usuarios.txt", "r");
+    system("cls");
     if(f == NULL) printf("No se ha podido abrir el archivo");
     else{
 
@@ -145,7 +144,7 @@ void registrarse(){
 
 void menu_inicio(){
 
-    int selec;
+    int selec, salir;
     usuario *user;
     int numero_usuarios, sesion_usuario;
     char *selec_admin = "administrador";
@@ -153,7 +152,7 @@ void menu_inicio(){
     user = cargar(&numero_usuarios);
 
     do{
-
+        system("cls");
         printf("   ___  _           ___  _           ___              \n"
                "  / __\\| |  __ _   / __\\| |  __ _   / __\\  __ _  _ __ \n"
                " /__\\//| | / _` | /__\\//| | / _` | / /    / _` || '__|\n"
@@ -166,24 +165,28 @@ void menu_inicio(){
         printf("Opcion 2: Registrarse\n");
         printf("Opcion 3: Salir del programa\n");
         printf("\nSeleccione una opcion: ");
+        fflush(stdin);
         scanf("%i", &selec);
 
-        system("cls");
 
         switch(selec){
 
             case 1: sesion_usuario = iniciar_sesion(user, &numero_usuarios); break;
-            case 2:
-            case 3: exit(1);
-            default: printf("\nSELECCIONE UNA OPCION VALIDA\n\n"); fflush(stdin);
+            case 2: user = dar_alta(user, &numero_usuarios);
+            case 3: /*sobreescribir_fichero(user, &numero_usuarios)*/; salir = 1; break;
+            default: printf("\nSELECCIONE UNA OPCION VALIDA\n\n");
                 system("pause");
-                system("cls");
 
         }
-    }while (selec < 1 || selec > 3);
 
-    if(strcmp(user[sesion_usuario].Perfil_usuario, selec_admin) != 0) cuenta_usuario(user, sesion_usuario, &numero_usuarios);
-    else cuenta_admin(user, sesion_usuario, &numero_usuarios);
+        if(salir == 1) exit(1);
+
+        if(selec == 1){
+            if(strcmp(user[sesion_usuario].Perfil_usuario, selec_admin) != 0) cuenta_usuario(user, sesion_usuario, &numero_usuarios);
+            else cuenta_admin(user, sesion_usuario, &numero_usuarios);
+        }
+
+    }while ((selec < 1 || selec > 3) || salir != 1);
 
 }
 
@@ -261,7 +264,7 @@ void cuenta_usuario(usuario *user, int sesion_usuario, int *numero_usuarios){
             case 1: perfil(user, sesion_usuario, numero_usuarios); fflush(stdin); break;
             case 2: printf("Sin implementar.\n"); break;
             case 3: printf("Sin implementar.\n"); break;
-            case 4: exit(1);
+            case 4: break;
             default: printf("\nSELECCIONE UNA OPCION VALIDA\n\n"); fflush(stdin);
                 system("pause");
                 system("cls");
@@ -444,3 +447,89 @@ void quitar_salto(char *aux){
     }
 }
 */
+
+void sobreescribir_fichero(usuario *user, int *numero_usuarios){
+
+    FILE *f;
+    int i;
+
+    f = fopen("Usuarios.txt", "w");
+
+    printf("Numero usuarios: %i", *numero_usuarios);
+    system("pause");
+
+
+    for(i = 0; i < (*numero_usuarios); i++){
+        fprintf(f, "%05d-%s-%s-%s-%s-%s\n", user[i].Id_usuario, user[i].Nomb_usuario, user[i].Localidad, user[i].Perfil_usuario, user[i].Usuario, user[i].Contrasena);
+    }
+
+    fclose(f);
+};
+
+usuario *dar_alta(usuario *user, int *numero_usuarios){
+
+    FILE * f;
+    char *usu = "usuario";
+    char nombre_usuario[6];
+    int salir = 0;
+
+    f = fopen("Usuarios.txt", "w");
+
+    user = (usuario *)malloc((*numero_usuarios+1)* sizeof(usuario));
+    user = (usuario *) realloc(user, (*numero_usuarios + 1) * sizeof(usuario));
+
+    user[*numero_usuarios].Id_usuario = (*numero_usuarios) + 1;
+    printf("Introduzca su nombre (20 caracteres): "); fflush(stdin); fgets(user[*numero_usuarios].Nomb_usuario, 21, stdin);
+    printf("Introduzca su localidad (20 caracteres): "); fflush(stdin); fgets(user[*numero_usuarios].Localidad, 21, stdin);
+    strcpy(user[*numero_usuarios].Perfil_usuario, usu);
+
+    do{
+
+        printf("Introduce su nombre de usuario: "); fflush(stdin); fgets(nombre_usuario, 6, stdin);
+
+        if((*numero_usuarios) == 0) {
+            strcpy(user[*numero_usuarios].Usuario, nombre_usuario);
+        }else{
+            for(int i = 0; i < (*numero_usuarios) && salir == 0; i++){
+                printf("Hola3");
+                if(strcmp(nombre_usuario, user[i].Usuario) == 0){
+                    salir = 1;
+                    printf("USUARIO EXISTENTE, INTRODUZCA UN USUARIO DIFERENTE\n\n");
+                    system("pause");
+                    system("cls");
+                }
+            }
+        }
+
+        strcpy(user[*numero_usuarios].Usuario, nombre_usuario);
+
+    } while(salir == 1);
+
+
+    printf("Hola");
+
+    printf("Introduzca una contrasena (8 caracteres): "); fflush(stdin); fgets(user[*numero_usuarios].Contrasena, 9, stdin);
+
+    printf("Hola2");
+
+    quitar_salto(user[*numero_usuarios].Nomb_usuario);
+    quitar_salto(user[*numero_usuarios].Localidad);
+    quitar_salto(user[*numero_usuarios].Perfil_usuario);
+    quitar_salto(user[*numero_usuarios].Usuario);
+
+    fclose(f);
+    (*numero_usuarios) += 1;
+
+    printf("Antes de sobreescribir el fichero\n\n");
+
+    for(int i = 0; i < (*numero_usuarios); i++){
+        printf("Usuario %i",i+1);
+        printf("%05d-%s-%s-%s-%s-%s\n", user[i].Id_usuario, user[i].Nomb_usuario, user[i].Localidad, user[i].Perfil_usuario, user[i].Usuario, user[i].Contrasena);
+    }
+
+    system("pause");
+
+    sobreescribir_fichero(user, numero_usuarios);
+
+    return user;
+}
