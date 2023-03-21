@@ -104,16 +104,6 @@ int existe_paso(Pasos *p, unsigned n, int id) {
 		return 0;
 }
 
-Pasos agregar_paso(int i) {
-	Pasos nuevo;
-	
-	fflush(stdin);
-	printf("Introduzca la poblacion del paso %i: ", i+1);
-	fgets(nuevo.Poblacion,20,stdin);
-	quitar_salto(nuevo.Poblacion);
-	
-	return nuevo;
-}
 Pasos *agregar_pasos(Pasos *original,int *n) {
 	int i, nPasos, cont = 0, id = original[(*n)-1].Id_viaje + 1;
 	char Poblacion[20];
@@ -165,4 +155,51 @@ int existe_paso_no_actual(Pasos *p, int nTotal, char *Poblacion, int actual, int
 		}
 	}
 	return existe;
+}
+
+Pasos *eliminar_paso(Pasos *original, int *n, int i) {
+	Pasos *p = original;
+	
+	while(i < (*n)-1) {
+		p[i] = p[i+1];
+		i++;
+	}
+	
+	return p;
+}
+
+Pasos* eliminar_pasos(Pasos* original, int* n, int id) {
+	Pasos* p = NULL;
+	int num_posiciones = 0;
+	int* posiciones = encontrar_posiciones(original, *n, id, &num_posiciones);
+	int i = 0, j = 0, nFinal = *n - num_posiciones;
+	p = realloc(p, nFinal * sizeof(Pasos));
+	
+	while(i < *n) {
+		if (j < num_posiciones && posiciones[j] == i) {
+			i++;
+			j++;
+		}
+		else {
+			p[i-j] = original[i];
+			i++;
+		}
+	}
+	*n = nFinal;
+	return p;
+}
+
+int* encontrar_posiciones(Pasos* vector, int tam, int id_buscado, int* num_posiciones) {
+	int* posiciones = NULL;
+	*num_posiciones = 0;
+	
+	for (int i = 0; i < tam; i++) {
+		if (vector[i].Id_viaje == id_buscado) {
+			(*num_posiciones)++;
+			posiciones = (int*)realloc(posiciones, (*num_posiciones)*sizeof(int));
+			posiciones[(*num_posiciones)-1] = i;
+		}
+	}
+	
+	return posiciones;
 }
