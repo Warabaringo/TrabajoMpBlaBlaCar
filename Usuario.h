@@ -23,7 +23,8 @@ void mostrar_lista(usuario *user, int *numero_usuarios);
 void sobreescribir_fichero(usuario *user, int *numero_usuarios);
 usuario *dar_alta(usuario *user, int *numero_usuarios);
 usuario *dar_baja(usuario *user, int *numero_usuarios);
-void ordenar_usuarios(usuario *user, int numero_usuarios);
+usuario *ordenar_usuarios(usuario *user, int numero_usuarios);
+int generar_id_usuarios(usuario *user, int *numero_usuarios);
 
 
 //FUNCIONES USUARIO

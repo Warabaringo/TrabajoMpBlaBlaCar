@@ -155,9 +155,11 @@ void menu_inicio(){
     char *selec_admin = "administrador";
 
     user = cargar(&numero_usuarios);
-    ordenar_usuarios(user, numero_usuarios);
 
     do{
+
+        user = ordenar_usuarios(user, numero_usuarios);
+        sobreescribir_fichero(user, &numero_usuarios);
         system("cls");
         printf("   ___  _           ___  _           ___              \n"
                "  / __\\| |  __ _   / __\\| |  __ _   / __\\  __ _  _ __ \n"
@@ -178,8 +180,8 @@ void menu_inicio(){
         switch(selec){
 
             case 1: sesion_usuario = iniciar_sesion(user, &numero_usuarios); break;
-            case 2: user = dar_alta(user, &numero_usuarios); break;
-            case 3: /*sobreescribir_fichero(user, &numero_usuarios)*/; salir = 1; break;
+            case 2: system("cls"); user = dar_alta(user, &numero_usuarios); break;
+            case 3: salir = 1; break;
             default: printf("\nSELECCIONE UNA OPCION VALIDA\n\n");
                 system("pause");
 
@@ -191,6 +193,8 @@ void menu_inicio(){
             if(strcmp(user[sesion_usuario].Perfil_usuario, selec_admin) != 0) cuenta_usuario(user, sesion_usuario, &numero_usuarios);
             else cuenta_admin(user, sesion_usuario, &numero_usuarios);
         }
+
+
 
     }while ((selec < 1 || selec > 3) || salir != 1);
 
@@ -351,6 +355,7 @@ usuario *cargar(int *numero_usuarios){
     fclose(f);
     return usu;
     free(usu);
+
 }
 
 
@@ -395,9 +400,8 @@ usuario *dar_alta(usuario *user, int *numero_usuarios){
 
     usuario nuevo_usuario;
 
-    id = user[*numero_usuarios-1].Id_usuario;
+    nuevo_usuario.Id_usuario = generar_id_usuarios(user, numero_usuarios);
 
-    nuevo_usuario.Id_usuario =  generar_id(id);
     printf("Introduzca su nombre (20 caracteres): "); fflush(stdin); fgets(nuevo_usuario.Nomb_usuario, 21, stdin);
     printf("Introduzca su localidad (20 caracteres): "); fflush(stdin); fgets(nuevo_usuario.Localidad, 21, stdin);
     strcpy(nuevo_usuario.Perfil_usuario, usu);
@@ -482,12 +486,10 @@ usuario *dar_baja(usuario *user, int *numero_usuarios){
         printf("Usuario con ID %d no encontrado.\n", id_usuario);
     }
 
-    ordenar_usuarios(user, *numero_usuarios);
-
     return user;
 }
 
-void ordenar_usuarios(usuario *user, int numero_usuarios){
+usuario *ordenar_usuarios(usuario *user, int numero_usuarios){
     for (int i = 0; i < numero_usuarios - 1; i++) {
         for (int j = i + 1; j < numero_usuarios; j++) {
             if (user[i].Id_usuario > user[j].Id_usuario) {
@@ -499,4 +501,24 @@ void ordenar_usuarios(usuario *user, int numero_usuarios){
             }
         }
     }
+    return user;
+}
+
+int generar_id_usuarios(usuario *user, int *numero_usuarios){
+
+    int i, comp = 1, salida, encontrado = 0;
+
+    do{
+        salida = 0;
+        for(i = 0; i < *numero_usuarios && salida == 0; i++){
+            if(comp == user[i].Id_usuario) {
+                salida = 1;
+                comp++;
+            }
+        }
+        if(salida == 0) encontrado = 1;
+
+    }while(i < *numero_usuarios && encontrado == 0);
+
+    return comp;
 }
