@@ -30,5 +30,5 @@ Pasos *eliminar_pasos(Pasos *original, int *n, int id);
 int existe_paso_no_actual(Pasos *p, int nTotal, char *Poblacion, int actual, int id);
 int existe_paso(Pasos *p, unsigned n, int id);
 void mostrar_pasos_id(Pasos *pasos, int n, int id);
-int* encontrar_posiciones(Pasos* vector, int tam, int id_buscado, int* num_posiciones);
+int* encontrar_posiciones_Pasos(Pasos* vector, int tam, int id_buscado, int* num_posiciones);
 #endif //PASOS_H

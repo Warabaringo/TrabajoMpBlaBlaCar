@@ -171,7 +171,7 @@ Pasos *eliminar_paso(Pasos *original, int *n, int i) {
 Pasos* eliminar_pasos(Pasos* original, int* n, int id) {
 	Pasos* p = NULL;
 	int num_posiciones = 0;
-	int* posiciones = encontrar_posiciones(original, *n, id, &num_posiciones);
+	int* posiciones = encontrar_posiciones_Pasos(original, *n, id, &num_posiciones);
 	int i = 0, j = 0, nFinal = *n - num_posiciones;
 	p = realloc(p, nFinal * sizeof(Pasos));
 	
@@ -189,7 +189,7 @@ Pasos* eliminar_pasos(Pasos* original, int* n, int id) {
 	return p;
 }
 
-int* encontrar_posiciones(Pasos* vector, int tam, int id_buscado, int* num_posiciones) {
+int* encontrar_posiciones_Pasos(Pasos* vector, int tam, int id_buscado, int* num_posiciones) {
 	int* posiciones = NULL;
 	*num_posiciones = 0;
 	
