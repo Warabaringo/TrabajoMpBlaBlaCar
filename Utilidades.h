@@ -9,4 +9,8 @@
 //Postcondición: Quita el salto de la cadena s
 void quitar_salto(char *s);
 
+//Precondición: Ninguna
+//Postcondicion: Genera un nuevo id usable
+int generar_id(int id);
+
 #endif //UTILIDADES_H
