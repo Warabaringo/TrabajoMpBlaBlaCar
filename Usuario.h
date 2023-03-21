@@ -22,7 +22,8 @@ usuario *cargar(int *numero_usuarios);
 void mostrar_lista(usuario *user, int *numero_usuarios);
 void sobreescribir_fichero(usuario *user, int *numero_usuarios);
 usuario *dar_alta(usuario *user, int *numero_usuarios);
-void anadir(usuario *user, int *numero_usuarios);
+usuario *dar_baja(usuario *user, int *numero_usuarios);
+void ordenar_usuarios(usuario *user, int numero_usuarios);
 
 
 //FUNCIONES USUARIO

@@ -50,6 +50,7 @@ usuario *perfil(usuario *user, int sesion_usuario, int *numero_usuarios){
 usuario *modificar_usuario(usuario *user, int sesion_usuario, int *numero_usuarios){
 
     int selec;
+    char eliminar;
 
     system("cls");
 
@@ -76,6 +77,7 @@ usuario *modificar_usuario(usuario *user, int sesion_usuario, int *numero_usuari
         printf("3. Usuario\n");
         printf("4. Contrasena\n");
         printf("5. Volver\n\n");
+        printf("6. Eliminar cuenta\n\n");
         printf("Seleccione una opcion: "); fflush(stdin); scanf("%i", &selec);
         system("cls");
 
@@ -86,6 +88,8 @@ usuario *modificar_usuario(usuario *user, int sesion_usuario, int *numero_usuari
             case 3: printf("Introduce nuevo usuario (5 caracteres): "); fflush(stdin); fgets(user[sesion_usuario].Usuario, 6, stdin); quitar_salto(user[sesion_usuario].Usuario); break;
             case 4: printf("Introduce nueva contrasena (8 caracteres): "); fflush(stdin); fgets(user[sesion_usuario].Contrasena, 9, stdin); quitar_salto(user[sesion_usuario].Contrasena); break;
             case 5: break;
+            case 6:
+                printf("¿Estas seguro que deseas eliminar esta cuenta permanentemente?\n\n(s/n)"); scanf("%c", &eliminar); if(eliminar == 's' || eliminar == 'S') printf("Sin implementar\n\n"); break;//dar_baja()
             default:
                 printf("INTRODUCE UNA OPCION VALIDA");
                 system("pause");
@@ -146,10 +150,12 @@ void menu_inicio(){
 
     int selec, salir;
     usuario *user;
-    int numero_usuarios, sesion_usuario;
+    int *numero_usuarios;
+    int sesion_usuario;
     char *selec_admin = "administrador";
 
     user = cargar(&numero_usuarios);
+    ordenar_usuarios(user, numero_usuarios);
 
     do{
         system("cls");
@@ -172,7 +178,7 @@ void menu_inicio(){
         switch(selec){
 
             case 1: sesion_usuario = iniciar_sesion(user, &numero_usuarios); break;
-            case 2: user = dar_alta(user, &numero_usuarios);
+            case 2: user = dar_alta(user, &numero_usuarios); break;
             case 3: /*sobreescribir_fichero(user, &numero_usuarios)*/; salir = 1; break;
             default: printf("\nSELECCIONE UNA OPCION VALIDA\n\n");
                 system("pause");
@@ -223,6 +229,7 @@ void menu_admin_usuarios(usuario *user, int *numero_usuarios){
     int selec, exit = 0, id_user = -1;
 
     do{
+
         system("cls");
         printf("\tGestion de Usuarios\n\n");
         printf("1. Dar de alta\n2. Dar de baja\n3. Modificar usuario\n4. Listar usuarios\n5. Volver\n\n");
@@ -234,8 +241,8 @@ void menu_admin_usuarios(usuario *user, int *numero_usuarios){
 
         switch (selec) {
 
-            case 1: break;
-            case 2: break;
+            case 1: dar_alta(user, numero_usuarios); break;
+            case 2: dar_baja(user, numero_usuarios); break;
             case 3: modificar_usuario(user, id_user, numero_usuarios);break;
             case 4: mostrar_lista(user, numero_usuarios); system("pause"); break;
             case 5: exit = 1; break;
@@ -362,91 +369,6 @@ void mostrar_lista(usuario *user, int *numero_usuarios){
     puts("");
 
 }
-/*
-void anadir(usuario *user, int *numero_usuarios){
-
-    FILE *f;
-    int i, j, aux, bucle = 0;
-    char continuar = 's';
-
-    f = fopen("Usuarios.txt", "a");
-
-    if(f == NULL) printf("No se ha podido abrir el fichero.\n\n");
-    else{
-
-        user = (usuario *) malloc(*numero_usuarios+1);
-        printf("Introduzca un ID de 4 digitos: "); fflush(stdin), fgets(user[*numero_usuarios].Id_usuario, 5, stdin);
-        printf("Control 1\n");
-        for(i = 0; i <  *numero_usuarios && bucle == 0; i++){
-
-            do{
-
-                aux = 0;
-                for(j = 0; j < *numero_usuarios && aux == 0; j++){
-
-                    if(strcmp(user[j].Id_usuario, user[*numero_usuarios].Id_usuario) == 0) aux = 1;
-
-                }
-
-                if(aux == 1){
-                    printf("Introduce un ID valido: ");
-                    fflush(stdin);
-                    fgets(user[*numero_usuarios].Id_usuario, 6, stdin);
-                }
-
-            }while(aux == 1);
-
-            printf("Introduzca su nombre (20 caracteres): "); fflush(stdin); fgets(user[*numero_usuarios].Nomb_usuario, 21, stdin);
-            printf("Introduce la localidad (20 caracteres): "); fflush(stdin); fgets(user[*numero_usuarios].Localidad, 21, stdin);
-            printf("Introduce permisos de usuario (usario o administrador): "); fflush(stdin); fgets(user[*numero_usuarios].Perfil_usuario, 14, stdin);
-            printf("Introduce el nombre de usuario (5 caracteres): "); fflush(stdin); fgets(user[*numero_usuarios].Usuario, 6, stdin);
-            printf("Introduzca la contrasena (8 caracteres): "); fflush(stdin); fgets(user[*numero_usuarios].Contrasena, 9, stdin);
-
-
-            quitar_salto(user[*numero_usuarios].Id_usuario);
-            quitar_salto(user[*numero_usuarios].Nomb_usuario);
-            quitar_salto(user[*numero_usuarios].Localidad);
-            quitar_salto(user[*numero_usuarios].Perfil_usuario);
-            quitar_salto(user[*numero_usuarios].Usuario);
-            quitar_salto(user[*numero_usuarios].Contrasena);
-
-
-            printf("%s-%s-%s-%s-%s-%s", user[*numero_usuarios].Id_usuario, user[*numero_usuarios].Nomb_usuario, user[*numero_usuarios].Localidad, user[*numero_usuarios].Usuario, user[*numero_usuarios].Perfil_usuario, user[*numero_usuarios].Contrasena);
-
-            do{
-                system("cls");
-                printf("%cDesea a%cadir otro alumno?\n\n(s/n)",168,164);
-                fflush(stdin);
-                scanf("%c",&continuar);
-                system("cls");
-
-            }while(continuar != 's' && continuar != 'n');
-
-            if(continuar == 'n') bucle = 1;
-        }
-
-    }
-
-    fclose(f);
-
-}
-
-
-
-
-//cabecera: void quitar_salto(char aux[140])
-//precondición: recibe un string
-//postcondición: intercambia el caracter '\n' de un string por el caracter '\0'
-void quitar_salto(char *aux){
-    int i, temp = 0;
-    for(i = 0; i < 67 && temp == 0; i++){
-        if(aux[i] == '\n') {
-            aux[i] = '\0';
-            temp = 1;
-        }
-    }
-}
-*/
 
 void sobreescribir_fichero(usuario *user, int *numero_usuarios){
 
@@ -455,81 +377,123 @@ void sobreescribir_fichero(usuario *user, int *numero_usuarios){
 
     f = fopen("Usuarios.txt", "w");
 
-    printf("Numero usuarios: %i", *numero_usuarios);
-    system("pause");
-
-
     for(i = 0; i < (*numero_usuarios); i++){
         fprintf(f, "%05d-%s-%s-%s-%s-%s\n", user[i].Id_usuario, user[i].Nomb_usuario, user[i].Localidad, user[i].Perfil_usuario, user[i].Usuario, user[i].Contrasena);
     }
 
     fclose(f);
-};
+}
 
 usuario *dar_alta(usuario *user, int *numero_usuarios){
 
-    FILE * f;
+    FILE *f;
     char *usu = "usuario";
     char nombre_usuario[6];
     int salir = 0;
 
-    f = fopen("Usuarios.txt", "w");
+    f = fopen("Usuarios.txt", "a");
 
-    user = (usuario *)malloc((*numero_usuarios+1)* sizeof(usuario));
-    user = (usuario *) realloc(user, (*numero_usuarios + 1) * sizeof(usuario));
+    usuario nuevo_usuario;
+    nuevo_usuario.Id_usuario = (*numero_usuarios) + 1;
+    printf("Introduzca su nombre (20 caracteres): "); fflush(stdin); fgets(nuevo_usuario.Nomb_usuario, 21, stdin);
+    printf("Introduzca su localidad (20 caracteres): "); fflush(stdin); fgets(nuevo_usuario.Localidad, 21, stdin);
+    strcpy(nuevo_usuario.Perfil_usuario, usu);
 
-    user[*numero_usuarios].Id_usuario = (*numero_usuarios) + 1;
-    printf("Introduzca su nombre (20 caracteres): "); fflush(stdin); fgets(user[*numero_usuarios].Nomb_usuario, 21, stdin);
-    printf("Introduzca su localidad (20 caracteres): "); fflush(stdin); fgets(user[*numero_usuarios].Localidad, 21, stdin);
-    strcpy(user[*numero_usuarios].Perfil_usuario, usu);
-
-    do{
-
+    do {
         printf("Introduce su nombre de usuario: "); fflush(stdin); fgets(nombre_usuario, 6, stdin);
 
-        if((*numero_usuarios) == 0) {
-            strcpy(user[*numero_usuarios].Usuario, nombre_usuario);
-        }else{
-            for(int i = 0; i < (*numero_usuarios) && salir == 0; i++){
-                printf("Hola3");
-                if(strcmp(nombre_usuario, user[i].Usuario) == 0){
+        if ((*numero_usuarios) == 0) {
+            strcpy(nuevo_usuario.Usuario, nombre_usuario);
+        }
+        else {
+            salir = 0;
+            for (int i = 0; i < (*numero_usuarios) && salir == 0; i++) {
+                if (strcmp(nombre_usuario, user[i].Usuario) == 0) {
                     salir = 1;
                     printf("USUARIO EXISTENTE, INTRODUZCA UN USUARIO DIFERENTE\n\n");
                     system("pause");
                     system("cls");
                 }
             }
+
+            if (salir == 0) {
+                strcpy(nuevo_usuario.Usuario, nombre_usuario);
+            }
         }
+    } while (salir == 1);
 
-        strcpy(user[*numero_usuarios].Usuario, nombre_usuario);
+    printf("Introduzca una contrasena (8 caracteres): "); fflush(stdin); fgets(nuevo_usuario.Contrasena, 9, stdin);
 
-    } while(salir == 1);
+    quitar_salto(nuevo_usuario.Nomb_usuario);
+    quitar_salto(nuevo_usuario.Localidad);
+    quitar_salto(nuevo_usuario.Perfil_usuario);
+    quitar_salto(nuevo_usuario.Usuario);
 
-
-    printf("Hola");
-
-    printf("Introduzca una contrasena (8 caracteres): "); fflush(stdin); fgets(user[*numero_usuarios].Contrasena, 9, stdin);
-
-    printf("Hola2");
-
-    quitar_salto(user[*numero_usuarios].Nomb_usuario);
-    quitar_salto(user[*numero_usuarios].Localidad);
-    quitar_salto(user[*numero_usuarios].Perfil_usuario);
-    quitar_salto(user[*numero_usuarios].Usuario);
-
-    fclose(f);
-    (*numero_usuarios) += 1;
-
-    printf("Antes de sobreescribir el fichero\n\n");
-
-    for(int i = 0; i < (*numero_usuarios); i++){
-        printf("Usuario %i",i+1);
-        printf("%05d-%s-%s-%s-%s-%s\n", user[i].Id_usuario, user[i].Nomb_usuario, user[i].Localidad, user[i].Perfil_usuario, user[i].Usuario, user[i].Contrasena);
+    usuario *temporal = (usuario *)malloc((*numero_usuarios + 1) * sizeof(usuario));
+    for (int i = 0; i < (*numero_usuarios); i++) {
+        temporal[i] = user[i];
     }
 
-    system("pause");
+    temporal[*numero_usuarios] = nuevo_usuario;
 
+    free(user);
+    user = temporal;
+
+    (*numero_usuarios)++;
     sobreescribir_fichero(user, numero_usuarios);
 
+    fclose(f);
+
     return user;
+}
+
+usuario *dar_baja(usuario *user, int *numero_usuarios){
+
+    int id_usuario, encontrado = 0;
+    usuario *temporal = (usuario *)malloc((*numero_usuarios - 1) * sizeof(usuario));
+
+    printf("Introduzca el ID del usuario a dar de baja: ");
+    scanf("%d", &id_usuario);
+
+    for (int i = 0; i < (*numero_usuarios) && encontrado == 0; i++) {
+        if (user[i].Id_usuario == id_usuario) {
+            encontrado = 1;
+
+            int j;
+            for (j = 0; j < i; j++) {
+                temporal[j] = user[j];
+            }
+            for (j = i + 1; j < (*numero_usuarios); j++) {
+                temporal[j - 1] = user[j];
+            }
+            free(user);
+            user = temporal;
+            (*numero_usuarios)--;
+            sobreescribir_fichero(user, numero_usuarios);
+
+            printf("Usuario con ID %d eliminado correctamente.\n", id_usuario);
+        }
+    }
+
+    if (encontrado == 0) {
+        printf("Usuario con ID %d no encontrado.\n", id_usuario);
+    }
+
+    ordenar_usuarios(user, *numero_usuarios);
+
+    return user;
+}
+
+void ordenar_usuarios(usuario *user, int numero_usuarios){
+    for (int i = 0; i < numero_usuarios - 1; i++) {
+        for (int j = i + 1; j < numero_usuarios; j++) {
+            if (user[i].Id_usuario > user[j].Id_usuario) {
+
+                usuario temp = user[i];
+                user[i] = user[j];
+                user[j] = temp;
+
+            }
+        }
+    }
 }
