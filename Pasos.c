@@ -3,6 +3,7 @@
 //
 
 #include "Pasos.h"
+#include "Utilidades.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -19,7 +20,7 @@ void mostrar_paso(Pasos p) {
 	printf("%06d-%s\n", p.Id_viaje, p.Poblacion);
 }
 
-int encontrar_paso(Pasos *p, unsigned n, int id) {
+int encontrar_id_paso(Pasos *p, unsigned n, int id) {
 	int i = 0, encontrado = -1;
 	
 	while (i < n && encontrado == -1) {
@@ -33,7 +34,7 @@ int encontrar_paso(Pasos *p, unsigned n, int id) {
 	return encontrado;
 }
 void mostrar_pasos_id(Pasos *pasos, int n, int id) {
-	int i = encontrar_paso(pasos,n,id), fin = 0;
+	int i = encontrar_id_paso(pasos,n,id), fin = 0;
 	if(existe_paso(pasos,n,id)) {
 		while (i < n && fin == 0) {
 			if(id == pasos[i].Id_viaje) {
@@ -97,8 +98,71 @@ void guardar_pasos(Pasos *pasos, unsigned n) {
 }
 
 int existe_paso(Pasos *p, unsigned n, int id) {
-	if(encontrar_paso(p,n,id) != -1)
+	if(encontrar_id_paso(p,n,id) != -1)
 		return 1;
 	else
 		return 0;
+}
+
+Pasos agregar_paso(int i) {
+	Pasos nuevo;
+	
+	fflush(stdin);
+	printf("Introduzca la poblacion del paso %i: ", i+1);
+	fgets(nuevo.Poblacion,20,stdin);
+	quitar_salto(nuevo.Poblacion);
+	
+	return nuevo;
+}
+Pasos *agregar_pasos(Pasos *original,int *n) {
+	int i, nPasos, cont = 0, id = original[(*n)-1].Id_viaje + 1;
+	char Poblacion[20];
+	Pasos *p = original;
+	do {
+		puts("Introduzca los pasos del nuevo viaje");
+		scanf("%i", &nPasos);
+	} while (nPasos <= 0);
+	
+	p = (Pasos *) realloc(p, (*n + nPasos) * sizeof(Pasos));
+	
+	for (i = *n; i < (*n + nPasos); i++) {
+		do {
+			fflush(stdin);
+			printf("Introduzca la poblacion del paso %i del nuevo viaje\n", cont+1);
+			fgets(Poblacion,20,stdin);
+			quitar_salto(Poblacion);
+		} while (existe_paso_no_actual(p, *n+nPasos,Poblacion, *n + cont, id)== 1);
+		strcpy(p[i].Poblacion,Poblacion);
+		p[i].Id_viaje = id;
+		cont++;
+	}
+	*n = *n + nPasos;
+	return p;
+}
+
+int encontrar_paso(Pasos *p, unsigned n, int id, char *poblacion) {
+	int i = 0, encontrado = -1;
+	
+	while(i < n && encontrado == -1) {
+		if(id == p[i].Id_viaje && strcmp(poblacion,p[i].Poblacion) == 0)
+			encontrado = i;
+		i++;
+	}
+	
+	return encontrado;
+}
+
+int existe_paso_no_actual(Pasos *p, int nTotal, char *Poblacion, int actual, int id) {
+	int i = 0, existe = 0;
+	
+	while (i < nTotal && existe == 0) {
+		if(i == actual)
+			i++;
+		else {
+			if (strcmp(Poblacion, p[i].Poblacion) == 0 && id == p[i].Id_viaje)
+				existe = 1;
+			i++;
+		}
+	}
+	return existe;
 }
