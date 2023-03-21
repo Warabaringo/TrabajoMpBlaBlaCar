@@ -12,3 +12,8 @@ void quitar_salto(char *s) {
 	if(pos != NULL)
 		*pos = '\0';
 }
+
+
+int generar_id(int id){
+    return (id+1);
+}

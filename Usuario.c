@@ -389,12 +389,15 @@ usuario *dar_alta(usuario *user, int *numero_usuarios){
     FILE *f;
     char *usu = "usuario";
     char nombre_usuario[6];
-    int salir = 0;
+    int id, salir = 0;
 
     f = fopen("Usuarios.txt", "a");
 
     usuario nuevo_usuario;
-    nuevo_usuario.Id_usuario = (*numero_usuarios) + 1;
+
+    id = user[*numero_usuarios-1].Id_usuario;
+
+    nuevo_usuario.Id_usuario =  generar_id(id);
     printf("Introduzca su nombre (20 caracteres): "); fflush(stdin); fgets(nuevo_usuario.Nomb_usuario, 21, stdin);
     printf("Introduzca su localidad (20 caracteres): "); fflush(stdin); fgets(nuevo_usuario.Localidad, 21, stdin);
     strcpy(nuevo_usuario.Perfil_usuario, usu);
