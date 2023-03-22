@@ -52,7 +52,7 @@ Pasos *leer_pasos(unsigned *nPasos) {
 	Pasos *pasos = NULL;
 	Pasos p;
 	
-	FILE *f = fopen("Pasos.txt", "r");
+	FILE *f = fopen("Pasos.txt", "ra");
 	char linea[40], *token;
 	int n = 0;
 	if(f == NULL) {
@@ -104,20 +104,10 @@ int existe_paso(Pasos *p, unsigned n, int id) {
 		return 0;
 }
 
-Pasos agregar_paso(int i) {
-	Pasos nuevo;
-	
-	fflush(stdin);
-	printf("Introduzca la poblacion del paso %i: ", i+1);
-	fgets(nuevo.Poblacion,20,stdin);
-	quitar_salto(nuevo.Poblacion);
-	
-	return nuevo;
-}
 Pasos *agregar_pasos(Pasos *original,int *n) {
-	int i, nPasos, cont = 0, id = original[(*n)-1].Id_viaje + 1;
+	int i, nPasos, cont = 0, id = generar_id_pasos(original,n);
 	char Poblacion[20];
-	Pasos *p = original;
+	Pasos *p = ordenar_pasos(p,*n);
 	do {
 		puts("Introduzca los pasos del nuevo viaje");
 		scanf("%i", &nPasos);
@@ -165,4 +155,65 @@ int existe_paso_no_actual(Pasos *p, int nTotal, char *Poblacion, int actual, int
 		}
 	}
 	return existe;
+}
+
+Pasos *eliminar_paso(Pasos *original, int *n, int i) {
+	Pasos *p = original;
+	
+	while(i < (*n)-1) {
+		p[i] = p[i+1];
+		i++;
+	}
+	
+	return p;
+}
+
+Pasos* eliminar_pasos(Pasos* original, int* n, int id) {
+	Pasos *p = (Pasos*) malloc((*n) * sizeof(Pasos));
+	int j = 0;
+	for (int i = 0; i < *n; ++i) {
+		if(original[i].Id_viaje != id) {
+			p[j].Id_viaje = original[i].Id_viaje;
+			strcpy(p[j].Poblacion, original[i].Poblacion);
+			j++;
+		}
+	}
+	
+	*n = j;
+	return (Pasos*) realloc(p, j*sizeof(Pasos));
+}
+
+Pasos *ordenar_pasos(Pasos *p, int numero_pasos){
+	Pasos temp;
+	for (int i = 0; i < numero_pasos - 1; i++) {
+		for (int j = i + 1; j < numero_pasos; j++) {
+			if (p[i].Id_viaje > p[j].Id_viaje) {
+				
+				temp = p[i];
+				p[i] = p[j];
+				p[j] = temp;
+				
+			}
+		}
+	}
+	return p;
+}
+
+int generar_id_pasos(Pasos *p, int *numero_pasos){
+	
+	int i, comp = 1, salida, encontrado = 0;
+	
+	do{
+		salida = 0;
+		for(i = 0; i < *numero_pasos && salida == 0; i++){
+			if(comp == p[i].Id_viaje) {
+				salida = 1;
+				comp++;
+			}
+		}
+		if(salida == 0) encontrado = 1;
+		
+	}while(i < *numero_pasos && encontrado == 0);
+	
+	return comp;
 }
