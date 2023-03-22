@@ -17,12 +17,12 @@ typedef struct{
 
 //FUNCIONES FICHERO
 void menu_inicio();
-void crear_fichero();
-usuario *cargar(int *numero_usuarios);
-void mostrar_lista(usuario *user, int *numero_usuarios);
-void sobreescribir_fichero(usuario *user, int *numero_usuarios);
-usuario *dar_alta(usuario *user, int *numero_usuarios);
-usuario *dar_baja(usuario *user, int *numero_usuarios);
+void crear_fichero_usuarios();
+usuario *cargar_usuarios(int *numero_usuarios);
+void mostrar_lista_usuarios(usuario *user, int *numero_usuarios);
+void sobreescribir_fichero_usuarios(usuario *user, int *numero_usuarios);
+usuario *dar_alta_usuarios(usuario *user, int *numero_usuarios);
+usuario *dar_baja_usuarios(usuario *user, int *numero_usuarios);
 usuario *ordenar_usuarios(usuario *user, int numero_usuarios);
 int generar_id_usuarios(usuario *user, int *numero_usuarios);
 
