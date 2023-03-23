@@ -27,6 +27,8 @@ int encontrar_paso(Pasos *p, unsigned n,int id, char *poblacion);
 Pasos *agregar_pasos(Pasos *original,int *n);
 Pasos *eliminar_paso(Pasos *original, int *n, int i);
 Pasos *eliminar_pasos(Pasos *original, int *n, int id);
+Pasos *modificar_pasos(Pasos *original, int n, int id);
+void modificar_paso(Pasos *original);
 int existe_paso_no_actual(Pasos *p, int nTotal, char *Poblacion, int actual, int id);
 int existe_paso(Pasos *p, unsigned n, int id);
 void mostrar_pasos_id(Pasos *pasos, int n, int id);

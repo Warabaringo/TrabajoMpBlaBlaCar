@@ -217,3 +217,26 @@ int generar_id_pasos(Pasos *p, int *numero_pasos){
 	
 	return comp;
 }
+
+Pasos *modificar_pasos(Pasos *original, int n, int id) {
+	Pasos *p = original;
+	int i = encontrar_id_paso(p,n,id);
+	while (p[i].Id_viaje == id) {
+		modificar_paso(&p[i]);
+		i++;
+	}
+	
+	return p;
+}
+
+void modificar_paso(Pasos *original) {
+	char Poblacion[21];
+	
+	printf("Introduzca la poblacion para modificar[%s]: ", original->Poblacion);
+	fgets(Poblacion,21,stdin);
+	if(strcmp(Poblacion,"\n") != 0) {
+		strcpy(original->Poblacion,Poblacion);
+		quitar_salto(original->Poblacion);
+	}
+	
+}
