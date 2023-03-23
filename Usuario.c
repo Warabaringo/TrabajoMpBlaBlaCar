@@ -89,7 +89,7 @@ usuario *modificar_usuario(usuario *user, int sesion_usuario, int *numero_usuari
             case 4: printf("Introduce nueva contrasena (8 caracteres): "); fflush(stdin); fgets(user[sesion_usuario].Contrasena, 9, stdin); quitar_salto(user[sesion_usuario].Contrasena); break;
             case 5: break;
             case 6:
-                printf("¿Estas seguro que deseas eliminar esta cuenta permanentemente?\n\n(s/n)"); scanf("%c", &eliminar); if(eliminar == 's' || eliminar == 'S') printf("Sin implementar\n\n"); break;//dar_baja()
+                printf("¿Estas seguro que deseas eliminar esta cuenta permanentemente?\n\n(s/n)"); scanf("%c", &eliminar); if(eliminar == 's' || eliminar == 'S') printf("Sin implementar\n\n"); break;//dar_baja_usuarios()
             default:
                 printf("INTRODUCE UNA OPCION VALIDA");
                 system("pause");
@@ -99,7 +99,7 @@ usuario *modificar_usuario(usuario *user, int sesion_usuario, int *numero_usuari
         system("cls");
     }while(selec < 1 || selec > 5);
 
-    sobreescribir_fichero(user, numero_usuarios);
+    sobreescribir_fichero_usuarios(user, numero_usuarios);
 
     return user;
 }
@@ -137,11 +137,6 @@ int iniciar_sesion(usuario *user, int *numero_usuarios){
     return valor_usuario;
 }
 
-void registrarse(){
-
-
-}
-
 //Cabecera: void menu (int selec)
 //Precondición:
 //Postcondición: imprime por pantalla un menú, el cual permite elegir diferentes opciones. No devuelve nada.
@@ -154,12 +149,12 @@ void menu_inicio(){
     int sesion_usuario;
     char *selec_admin = "administrador";
 
-    user = cargar(&numero_usuarios);
+    user = cargar_usuarios(&numero_usuarios);
 
     do{
 
         user = ordenar_usuarios(user, numero_usuarios);
-        sobreescribir_fichero(user, &numero_usuarios);
+        sobreescribir_fichero_usuarios(user, &numero_usuarios);
         system("cls");
         printf("   ___  _           ___  _           ___              \n"
                "  / __\\| |  __ _   / __\\| |  __ _   / __\\  __ _  _ __ \n"
@@ -180,7 +175,7 @@ void menu_inicio(){
         switch(selec){
 
             case 1: sesion_usuario = iniciar_sesion(user, &numero_usuarios); break;
-            case 2: system("cls"); user = dar_alta(user, &numero_usuarios); break;
+            case 2: system("cls"); user = dar_alta_usuarios(user, &numero_usuarios); break;
             case 3: salir = 1; break;
             default: printf("\nSELECCIONE UNA OPCION VALIDA\n\n");
                 system("pause");
@@ -245,10 +240,10 @@ void menu_admin_usuarios(usuario *user, int *numero_usuarios){
 
         switch (selec) {
 
-            case 1: dar_alta(user, numero_usuarios); break;
-            case 2: dar_baja(user, numero_usuarios); break;
+            case 1: dar_alta_usuarios(user, numero_usuarios); break;
+            case 2: dar_baja_usuarios(user, numero_usuarios); break;
             case 3: modificar_usuario(user, id_user, numero_usuarios);break;
-            case 4: mostrar_lista(user, numero_usuarios); system("pause"); break;
+            case 4: mostrar_lista_usuarios(user, numero_usuarios); system("pause"); break;
             case 5: exit = 1; break;
             default: printf("\nSELECCIONE UNA OPCION VALIDA\n\n");
                 system("pause");
@@ -296,22 +291,22 @@ void cuenta_usuario(usuario *user, int sesion_usuario, int *numero_usuarios){
 //
 
 
-//Cabecera: void crear_fichero()
+//Cabecera: void crear_fichero_usuarios()
 //Precondicion: sin precondicion
 //Postcondicion: Se crea un fichero de texto "usuarios.txt". Si el fichero ya existe, la funcion\
 no haría nada
 
-void crear_fichero(){
+void crear_fichero_usuarios(){
     FILE *f;
     f = fopen("usuarios.txt","a");
     fclose(f);
 }
 
-//Cabecera: usuario *cargar(int *numero_usuarios)
+//Cabecera: usuario *cargar_usuarios(int *numero_usuarios)
 //Precondicion: se necesita un fichero de texto "usuarios.txt". Recibe el numero de usuario, inicialmente a cero
 //Postcondicion: devuelve el vector con los datos del fichero de texto almacenados en él
 
-usuario *cargar(int *numero_usuarios){
+usuario *cargar_usuarios(int *numero_usuarios){
 
     FILE *f ;
     char *token, linea[67];
@@ -359,11 +354,11 @@ usuario *cargar(int *numero_usuarios){
 }
 
 
-//Cabecera: void mostrar_lista(usuario *user, int *numero_usuarios)
+//Cabecera: void mostrar_lista_usuarios(usuario *user, int *numero_usuarios)
 //Precondicion: Recibe un vector de estructura dinámico y un puntero a entero. El vector y el entero deben estar cargados
 //Postcondicion: Muestra una lista de todos los usuarios con sus datos
 
-void mostrar_lista(usuario *user, int *numero_usuarios){
+void mostrar_lista_usuarios(usuario *user, int *numero_usuarios){
     int i;
 
     printf("LISTA\n\nID-Nombre-Localidad-Perfil-usuario-Contrasena\n\n");
@@ -375,7 +370,7 @@ void mostrar_lista(usuario *user, int *numero_usuarios){
 
 }
 
-void sobreescribir_fichero(usuario *user, int *numero_usuarios){
+void sobreescribir_fichero_usuarios(usuario *user, int *numero_usuarios){
 
     FILE *f;
     int i;
@@ -389,7 +384,7 @@ void sobreescribir_fichero(usuario *user, int *numero_usuarios){
     fclose(f);
 }
 
-usuario *dar_alta(usuario *user, int *numero_usuarios){
+usuario *dar_alta_usuarios(usuario *user, int *numero_usuarios){
 
     FILE *f;
     char *usu = "usuario";
@@ -447,14 +442,14 @@ usuario *dar_alta(usuario *user, int *numero_usuarios){
     user = temporal;
 
     (*numero_usuarios)++;
-    sobreescribir_fichero(user, numero_usuarios);
+    sobreescribir_fichero_usuarios(user, numero_usuarios);
 
     fclose(f);
 
     return user;
 }
 
-usuario *dar_baja(usuario *user, int *numero_usuarios){
+usuario *dar_baja_usuarios(usuario *user, int *numero_usuarios){
 
     int id_usuario, encontrado = 0;
     usuario *temporal = (usuario *)malloc((*numero_usuarios - 1) * sizeof(usuario));
@@ -476,7 +471,7 @@ usuario *dar_baja(usuario *user, int *numero_usuarios){
             free(user);
             user = temporal;
             (*numero_usuarios)--;
-            sobreescribir_fichero(user, numero_usuarios);
+            sobreescribir_fichero_usuarios(user, numero_usuarios);
 
             printf("Usuario con ID %d eliminado correctamente.\n", id_usuario);
         }
