@@ -52,7 +52,7 @@ Pasos *leer_pasos(unsigned *nPasos) {
 	Pasos *pasos = NULL;
 	Pasos p;
 	
-	FILE *f = fopen("Pasos.txt", "ra");
+	FILE *f = fopen("Pasos.txt", "w");
 	char linea[40], *token;
 	int n = 0;
 	if(f == NULL) {
