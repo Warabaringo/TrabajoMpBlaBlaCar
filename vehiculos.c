@@ -23,7 +23,7 @@ void menu_vehiculos(Datos_vehiculos *vector, int *numero_vehiculos){
         switch (selec) {
             case 1: agregar_vehiculo(&vector, numero_vehiculos); break;
             case 2: modificar_vehiculo(vector, posicion); break;
-            case 3: borrar_vehiculo(vector, posicion); break;
+            case 3: borrar_vehiculo(vector, &posicion); break;
             case 4: lista_vehiculos(vector, *numero_vehiculos); system("pause"); break;
             case 5: break;
             default: printf("\nSELECCIONE UNA OPCION VALIDA\n\n");
@@ -121,7 +121,7 @@ void agregar_vehiculo(Datos_vehiculos **vector, int *tamano) { //¿Qué hacen los 
 }
 
 
-void modificar_vehiculo(Datos_vehiculos *vector, int posicion) {
+void modificar_vehiculo(Datos_vehiculos *vector, int tamano) {
     char matricula[8];
     int pos;
 
@@ -129,7 +129,7 @@ void modificar_vehiculo(Datos_vehiculos *vector, int posicion) {
         printf("Introduce la matricula del vehiculo a modificar (maximo 7 caracteres): ");
         fgets(matricula, 8, stdin);
         quitar_salto(matricula);
-        pos = buscar_matricula(vector, posicion, matricula);
+        pos = buscar_matricula(vector, tamano, matricula);
         if (pos == -1) {
             printf("La matricula no existe.\n");
         }
@@ -160,7 +160,7 @@ void borrar_vehiculo(Datos_vehiculos *vector, int *tamano) {
         printf("Introduce la matricula del vehiculo a borrar (maximo 7 caracteres): ");
         fgets(matricula, 8, stdin);
         quitar_salto(matricula);
-        pos = buscar_matricula(vector, *tamano, matricula);
+        pos = buscar_matricula(vector, &tamano, matricula);
         if (pos == -1) {
             printf("La matricula no existe.\n");
         }
