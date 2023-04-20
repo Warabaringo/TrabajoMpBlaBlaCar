@@ -1,6 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#ifndef VEHICULOS_H
+#define VEHICULOS_H
 
 typedef struct{
 	char matric_veh[8];
@@ -32,12 +31,12 @@ void modificar_vehiculo(Datos_vehiculos *, int);
 //Cabecera:void borrar_vehiculo(Datos_vehiculos *, int *)
 //Condicion:
 //Postcondicion: Elimina un vehiculo de la lista.
-void borrar_vehiculo(Datos_vehiculos *, int *);
+void borrar_vehiculo(Datos_vehiculos *, int);
 
 //Cabecera:int buscar_matricula(Datos_vehiculos *, int , char *)
 //Condicion:
 //Postcondicion: Busca si la matricula introducida por el usuario pertenece a un vehiculo o no existe.
 int buscar_matricula(Datos_vehiculos *, int , char *);
 
-
+#endif
 

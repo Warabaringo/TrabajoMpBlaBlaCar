@@ -1,5 +1,8 @@
 #include "Vehiculos.h"
-//#include "Utilidades.h"
+#include "Utilidades.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 void menu_vehiculos(Datos_vehiculos *vector, int *numero_vehiculos){
 
@@ -19,8 +22,8 @@ void menu_vehiculos(Datos_vehiculos *vector, int *numero_vehiculos){
 
         switch (selec) {
             case 1: agregar_vehiculo(&vector, numero_vehiculos); break;
-            case 2: modificar_vehiculo(vector, &posicion); break;
-            case 3: borrar_vehiculo(vector, &posicion); break;
+            case 2: modificar_vehiculo(vector, posicion); break;
+            case 3: borrar_vehiculo(vector, posicion); break;
             case 4: lista_vehiculos(vector, *numero_vehiculos); system("pause"); break;
             case 5: break;
             default: printf("\nSELECCIONE UNA OPCION VALIDA\n\n");
@@ -92,7 +95,7 @@ void agregar_vehiculo(Datos_vehiculos **vector, int *tamano) { //¿Qué hacen los 
 
     printf("Introduce la matricula (maximo 7 caracteres): ");
     fgets(vehiculo.matric_veh, 8, stdin);
-    //quitar_salto(vehiculo.matric_veh);
+    quitar_salto(vehiculo.matric_veh);
 
     printf("Introduce el ID del usuario: ");
     scanf("%d", &vehiculo.id_usu);
@@ -104,7 +107,7 @@ void agregar_vehiculo(Datos_vehiculos **vector, int *tamano) { //¿Qué hacen los 
 
     printf("Introduce la descripcion del vehiculo (maximo 50 caracteres): ");
     fgets(vehiculo.descrip_veh, 51, stdin);
-    //quitar_salto(vehiculo.descrip_veh);
+    quitar_salto(vehiculo.descrip_veh);
 
     (*tamano)++;
     Datos_vehiculos *tmp = (Datos_vehiculos *) realloc(*vector, (*tamano) * sizeof(Datos_vehiculos));
@@ -148,35 +151,61 @@ void modificar_vehiculo(Datos_vehiculos *vector, int posicion) {
 
 
 
-void borrar_vehiculo(Datos_vehiculos *vector, int *posicion) {
+void borrar_vehiculo(Datos_vehiculos *vector, int *tamano) {
     char matricula[8];
-    int pos;
+    int pos, i;
+    Datos_vehiculos *aux;
 
     do {
         printf("Introduce la matricula del vehiculo a borrar (maximo 7 caracteres): ");
         fgets(matricula, 8, stdin);
         quitar_salto(matricula);
-        pos = buscar_matricula(vector, *posicion, matricula);
+        pos = buscar_matricula(vector, *tamano, matricula);
         if (pos == -1) {
             printf("La matricula no existe.\n");
         }
     } while (pos == -1);
+    
+    aux=(Datos_vehiculos *)malloc((*tamano)*sizeof(Datos_vehiculos));
+    if(aux==NULL){
+    	printf("No se ha podido reservar memoria.\n");
+    	exit(1);
+	}
 
-    for (int i = pos; i < *posicion - 1; i++) {
-        strcpy(vector[i].matric_veh, vector[i + 1].matric_veh);
-        vector[i].id_usu = vector[i + 1].id_usu;
-        vector[i].num_plazas = vector[i + 1].num_plazas;
-        strcpy(vector[i].descrip_veh, vector[i + 1].descrip_veh);
+    for (i = pos; i < *tamano - 1; i++) {
+		if(i==pos){
+			strcpy(aux[i].matric_veh, vector[i].matric_veh);
+			aux[i].id_usu=vector[i].id_usu;
+			aux[i].num_plazas=vector[i].num_plazas;
+			strcpy(aux[i].descrip_veh, vector[i].descrip_veh);
+			
+		}
+		strcpy(vector[i - 1].matric_veh, vector[i].matric_veh);
+    	vector[i - 1].id_usu = vector[i].id_usu;
+        vector[i - 1].num_plazas = vector[i].num_plazas;
+        strcpy(vector[i - 1].descrip_veh, vector[i].descrip_veh);
+        if(i==*tamano-1){
+        	strcpy(vector[i].matric_veh, aux[i].matric_veh);
+        	vector[i].id_usu=aux[i].id_usu;
+        	vector[i].num_plazas=aux[i].num_plazas;
+        	strcpy(vector[i].descrip_veh, aux[i].descrip_veh);
+		}
     }
 
-    (*posicion)--;
-    vector = (Datos_vehiculos*)realloc(vector, sizeof(Datos_vehiculos) * (*posicion));
+    (*tamano)--;
+    vector=(Datos_vehiculos *)realloc(vector, (*tamano)*sizeof(Datos_vehiculos));
+    if(vector==NULL){
+    	printf("No se ha podido reservar memoria.\n");
+    	exit(1);
+	}
 }
 
 
 
 int buscar_matricula(Datos_vehiculos *vector, int tamano, char *matricula) {
-    for (int i = 0; i < tamano; i++) {
+	int i;
+	
+    for (i=0; i < tamano; i++) {
         if (strcmp(vector[i].matric_veh, matricula) == 0) {
             return i;
         }
